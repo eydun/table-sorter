@@ -1,4 +1,4 @@
-# vanilla-table-sorter
+# Vanilla-table-sorter
 
 A lightweight, dependency-free JavaScript utility that adds sortable behavior to an HTML table.
 Supports single-column sorting, multi-column sorting with **Shift+click**, numeric/text auto-detection, and persistent sort state via `localStorage`.
