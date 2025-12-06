@@ -54,7 +54,10 @@ Mark sortable headers using the `sortable` class and define the column index usi
 </table>
 ```
 
-Each sortable `<th>` can contain an optional SVG arrow icon to visualize direction.
+Each sortable `<th>` can contain an **optional** SVG arrow icon to visualize direction.  
+
+#### Example:  
+`<svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>`
 
 ---
 
