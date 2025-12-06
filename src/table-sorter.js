@@ -1,6 +1,6 @@
-function tableSorter(tableId) {
-    const STYLE_ID = 'vts-styles';
-    const CSS = `
+const STYLE_ID = 'vts-styles';
+
+const CSS = `
 th.sortable {
     cursor: pointer;
     user-select: none;
@@ -27,13 +27,23 @@ th.sortable svg.desc {
 }
 `;
 
-    function ensureStyles() {
-        if (document.getElementById(STYLE_ID)) return;
-        const style = document.createElement('style');
-        style.id = STYLE_ID;
-        style.textContent = CSS;
-        document.head.appendChild(style);
-    }
+function ensureStyles() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = CSS;
+    document.head.appendChild(style);
+}
+
+/**
+ * Create a table sorter instance for the given table ID.
+ * Usage:
+ *   import { tableSorter } from '@eydun/vanilla-table-sorter';
+ *   const sorter = tableSorter('demoTable');
+ *   sorter.init();
+ */
+export function tableSorter(tableId) {
+    const STORAGE_KEY = `vts-sortOrders-${tableId}`;
 
     return {
         sortOrders: [],
@@ -41,19 +51,31 @@ th.sortable svg.desc {
         init() {
             ensureStyles();
 
-            const saved = localStorage.getItem('tableSortOrders');
-            if (saved) {
-                this.sortOrders = JSON.parse(saved);
-                this.applySort();
-                this.updateHeaderClasses();
+            const table = document.getElementById(tableId);
+            if (!table) {
+                console.warn(`[vanilla-table-sorter] Table with id="${tableId}" not found.`);
+                return;
             }
 
-            const table = document.getElementById(tableId);
+            // Load saved sort state
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    this.sortOrders = JSON.parse(saved);
+                    this.applySort();
+                    this.updateHeaderClasses();
+                }
+            } catch (e) {
+                console.warn('[vanilla-table-sorter] Failed to read sort state from localStorage:', e);
+            }
+
+            // Attach click handlers
             table.querySelectorAll('th.sortable').forEach(th => {
                 th.addEventListener('click', e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    const index = parseInt(th.dataset.sortBy);
+                    const index = parseInt(th.dataset.sortBy, 10);
+                    if (Number.isNaN(index)) return;
                     this.sort(index, e);
                 });
             });
@@ -63,36 +85,54 @@ th.sortable svg.desc {
             const existingIndex = this.sortOrders.findIndex(o => o.index === colIndex);
 
             if (event.shiftKey) {
+                // Multi-column sort (add or toggle column)
                 if (existingIndex === -1) {
-                    this.sortOrders.push({index: colIndex, asc: true});
+                    this.sortOrders.push({ index: colIndex, asc: true });
                 } else {
                     this.sortOrders[existingIndex].asc = !this.sortOrders[existingIndex].asc;
                 }
             } else {
-                if (existingIndex !== -1 && this.sortOrders.length === 1 && this.sortOrders[0].index === colIndex) {
+                // Single-column sort (reset others)
+                if (
+                    existingIndex !== -1 &&
+                    this.sortOrders.length === 1 &&
+                    this.sortOrders[0].index === colIndex
+                ) {
+                    // Toggle same column
                     this.sortOrders[0].asc = !this.sortOrders[0].asc;
                 } else {
-                    this.sortOrders = [{index: colIndex, asc: true}];
+                    // New primary column
+                    this.sortOrders = [{ index: colIndex, asc: true }];
                 }
             }
 
             this.applySort();
             this.updateHeaderClasses();
-            localStorage.setItem('tableSortOrders', JSON.stringify(this.sortOrders));
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(this.sortOrders));
+            } catch (e) {
+                console.warn('[vanilla-table-sorter] Failed to save sort state to localStorage:', e);
+            }
         },
 
         applySort() {
             const table = document.getElementById(tableId);
+            if (!table || !table.tBodies[0]) return;
+
             const rows = Array.from(table.tBodies[0].rows);
 
             rows.sort((a, b) => {
-                for (const {index, asc} of this.sortOrders) {
-                    const valA = a.cells[index].textContent.trim();
-                    const valB = b.cells[index].textContent.trim();
-                    const numA = parseFloat(valA), numB = parseFloat(valB);
-                    const isNumeric = !isNaN(numA) && !isNaN(numB);
+                for (const { index, asc } of this.sortOrders) {
+                    const valA = a.cells[index]?.textContent.trim() ?? '';
+                    const valB = b.cells[index]?.textContent.trim() ?? '';
+
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+                    const isNumeric = !Number.isNaN(numA) && !Number.isNaN(numB);
 
                     let cmp = isNumeric ? (numA - numB) : valA.localeCompare(valB);
+
                     if (cmp !== 0) return asc ? cmp : -cmp;
                 }
                 return 0;
@@ -102,9 +142,13 @@ th.sortable svg.desc {
         },
 
         updateHeaderClasses() {
-            document.querySelectorAll(`#${tableId} th.sortable`).forEach(th => {
-                const index = parseInt(th.dataset.sortBy);
+            const table = document.getElementById(tableId);
+            if (!table) return;
+
+            table.querySelectorAll('th.sortable').forEach(th => {
+                const index = parseInt(th.dataset.sortBy, 10);
                 const svg = th.querySelector('svg');
+
                 th.classList.remove('sort-active');
                 svg?.classList.remove('desc');
 
@@ -117,3 +161,5 @@ th.sortable svg.desc {
         }
     };
 }
+
+export default tableSorter;

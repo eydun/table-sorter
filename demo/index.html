@@ -96,9 +96,9 @@
     </tbody>
 </table>
 
-<script src="../src/table-sorter.js"></script>
+<script type="module">
+    import { tableSorter } from '@eydun/vanilla-table-sorter';
 
-<script>
     const sorter = tableSorter('demoTable');
     sorter.init();
 </script>

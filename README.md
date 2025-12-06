@@ -1,104 +1,133 @@
-# Vanilla-table-sorter
+# vanilla-table-sorter
 
-A lightweight, dependency-free JavaScript utility that adds sortable behavior to an HTML table.
-Supports single-column sorting, multi-column sorting with **Shift+click**, numeric/text auto-detection, and persistent sort state via `localStorage`.
+A lightweight, dependency-free ES module that adds sortable behavior to an HTML table.
+Supports single-column sorting, multi-column sorting with Shift+click, numeric/text auto-detection, and persistent sort state via localStorage.
 
 ---
 
-## Features
+## FEATURES
 
+* ES module (no bundler required)
 * No dependencies (pure JavaScript)
 * Click column header to sort
-* Shift-click to add multi-column sorting
+* Shift-click for multi-column sorting
 * Auto-detects numeric vs text values
-* Persists sort order using `localStorage`
+* Persists sort order using localStorage, per table
 * CSS-controlled visual indicators
-* Minimal setup, minimal API surface
+* Minimal setup and API surface
 
 ---
 
-## Installation
+## INSTALLATION
 
-Copy the JS fileinto your project:
+1) Install via npm
 
-```
-src/
-  table-sorter.js
-```
+   npm install @eydun/vanilla-table-sorter
 
-Or embed inline if preferred.
+2) Direct browser usage via CDN
 
----
+    <script type="module">
+        import { tableSorter } from 'https://cdn.jsdelivr.net/npm/@eydun/vanilla-table-sorter/src/table-sorter.js';
 
-## Usage
+        const sorter = tableSorter('myTable');
+        sorter.init();
+    </script>
 
-### 1. HTML Setup
+3) Local file
 
-Mark sortable headers using the `sortable` class and define the column index using `data-sort-by`:
+   Copy: src/table-sorter.js
 
-```html
-<table id="myTable">
-    <thead>
-        <tr>
-		<th class="sortable" data-sort-by="0">Name
-            <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
-		</th>
-		<th class="sortable" data-sort-by="1">Age</th>
-            <th class="sortable" data-sort-by="2">City</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td>Alice</td><td>30</td><td>Paris</td></tr>
-        <tr><td>Bob</td><td>22</td><td>London</td></tr>
-    </tbody>
-</table>
-```
+   Then import:
 
-Each sortable `<th>` can contain an **optional** SVG arrow icon to visualize direction.  
+    <script type="module">
+        import { tableSorter } from './src/table-sorter.js';
 
-#### Example:  
-`<svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>`
+        const sorter = tableSorter('myTable');
+        sorter.init();
+    </script>
 
 ---
 
-### 2. JavaScript Initialization
+## USAGE
 
-```html
-<script src="table-sorter.js"></script>
-<script>
-    const sorter = tableSorter('myTable');
-    sorter.init();
-</script>
-```
+HTML setup
+
+Mark sortable headers using the sortable class and define the column index using data-sort-by:
+
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th class="sortable" data-sort-by="0">
+                    Name
+                    <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
+                </th>
+                <th class="sortable" data-sort-by="1">Age</th>
+                <th class="sortable" data-sort-by="2">City</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Alice</td><td>30</td><td>Paris</td></tr>
+            <tr><td>Bob</td><td>22</td><td>London</td></tr>
+        </tbody>
+    </table>
+
+Each sortable th can contain an optional SVG arrow icon to visualize direction.
+
+#### Example:
+
+    <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
+
+Initialize:
+
+    <script type="module">
+        import { tableSorter } from '@eydun/vanilla-table-sorter';
+
+        const sorter = tableSorter('myTable');
+        sorter.init();
+    </script>
+
+Multi-column sorting:
+
+Hold Shift when clicking another column header to add or change secondary/tertiary sort rules.
 
 ---
 
-### 3. Multi-Column Sorting
+### PERSISTENT SORT STATE
 
-Hold **Shift** when clicking another sortable column to add or change secondary/tertiary sort rules.
+Sort order is stored per table using:
+
+    localStorage["vts-sortOrders-<table-id>"]
+
+Refreshing the page restores the last sort order.
 
 ---
 
-## Demo
+### DEMO
 
-There is a sample HTML file under [/demo/index.html](/demo/index.html) to show how sorting works.
+Live demo:
+
+    https://eydun.github.io/vanilla-table-sorter
+
+Source example:
+
+    /demo/index.html
 
 ---
 
 ## API
 
-Only one entrypoint:
+Only one entry point:
 
-```js
-const sorter = tableSorter(tableId);
-sorter.init();
-```
+    import { tableSorter } from '@eydun/vanilla-table-sorter';
 
-No global side effects beyond storing sort order in `localStorage`.
+    const sorter = tableSorter('myTable');
+    sorter.init();
+
+No global state, no framework required.
 
 ---
 
-## Browser Support
+## BROWSER SUPPORT
 
 * Chrome
 * Firefox
@@ -109,12 +138,12 @@ No global side effects beyond storing sort order in `localStorage`.
 
 ---
 
-## License
+## LICENSE
 
-Released under the MIT License. See `LICENSE`.
+Released under the MIT License. See LICENSE.
 
 ---
 
-## Contributing
+## CONTRIBUTING
 
 Pull requests and issues are welcome.
