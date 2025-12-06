@@ -20,20 +20,15 @@ Supports single-column sorting, multi-column sorting with Shift+click, numeric/t
 
 ## INSTALLATION
 
-1) Install via npm
+#### 1) Install via npm (from GitHub)
 
-   npm install @eydun/vanilla-table-sorter
+Install directly from the GitHub repo:
 
-2) Direct browser usage via CDN
+```bash
+npm install github:eydun/vanilla-table-sorte
+```
 
-    <script type="module">
-        import { tableSorter } from 'https://cdn.jsdelivr.net/npm/@eydun/vanilla-table-sorter/src/table-sorter.js';
-
-        const sorter = tableSorter('myTable');
-        sorter.init();
-    </script>
-
-3) Local file
+#### 2) Local file
 
    Copy: src/table-sorter.js
 

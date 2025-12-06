@@ -1,105 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Vanilla-table-sorter demo</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            padding: 2rem;
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        h2 {
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-        }
-
-        #demoTable {
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            border-collapse: collapse;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        #demoTable thead {
-            background: #3498db;
-            color: white;
-        }
-
-        #demoTable th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.2s;
-        }
-
-        #demoTable th:hover {
-            background: #2980b9;
-        }
-
-        #demoTable th svg {
-            width: 10px;
-            height: 10px;
-            margin-left: 0.5rem;
-            vertical-align: middle;
-            fill: white;
-        }
-
-        #demoTable tbody tr {
-            border-bottom: 1px solid #ecf0f1;
-            transition: background 0.2s;
-        }
-
-        #demoTable tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        #demoTable tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        #demoTable td {
-            padding: 0.875rem 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="./app.css"/>
 </head>
 <body>
 
-<h2>Demo: vanilla-table-sorter</h2>
+<h2>Demo: Vanilla table sorter</h2>
 
 <table id="demoTable">
     <thead>
     <tr>
         <th class="sortable" data-sort-by="0">Name
-            <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
+            <svg viewBox="0 0 10 10">
+                <path d="M5 0 L10 10 L0 10 Z"></path>
+            </svg>
         </th>
         <th class="sortable" data-sort-by="1">Age
-            <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
+            <svg viewBox="0 0 10 10">
+                <path d="M5 0 L10 10 L0 10 Z"></path>
+            </svg>
         </th>
         <th class="sortable" data-sort-by="2">City
-            <svg viewBox="0 0 10 10"><path d="M5 0 L10 10 L0 10 Z"></path></svg>
+            <svg viewBox="0 0 10 10">
+                <path d="M5 0 L10 10 L0 10 Z"></path>
+            </svg>
         </th>
     </tr>
     </thead>
     <tbody>
-    <tr><td>Charlie</td><td>40</td><td>Berlin</td></tr>
-    <tr><td>Alice</td><td>30</td><td>Paris</td></tr>
-    <tr><td>Bob</td><td>22</td><td>London</td></tr>
+    <tr>
+        <td>Charlie</td>
+        <td>40</td>
+        <td>Berlin</td>
+    </tr>
+    <tr>
+        <td>Alice</td>
+        <td>30</td>
+        <td>Paris</td>
+    </tr>
+    <tr>
+        <td>Bob</td>
+        <td>22</td>
+        <td>London</td>
+    </tr>
     </tbody>
 </table>
 
 <script type="module">
-    import { tableSorter } from '@eydun/vanilla-table-sorter';
+    import { tableSorter } from '../src/table-sorter.js';
 
-    const sorter = tableSorter('demoTable');
+    let sorter;
+    sorter = tableSorter('demoTable');
     sorter.init();
 </script>
 
