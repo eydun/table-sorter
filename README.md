@@ -18,7 +18,7 @@ Supports single-column sorting, multi-column sorting with Shift+click, numeric/t
 
 ## INSTALLATION
 
-#### 1) Install via npm
+#### Install via npm
 
 Install from the npm registry:
 
@@ -26,24 +26,24 @@ Install from the npm registry:
 npm install @eydun/table-sorter
 ```
 
-#### 2) Local file
+#### or Local file
 
    Copy: src/table-sorter.js
 
-   Then import:
+## USAGE
 
     <script type="module">
         import { tableSorter } from './src/table-sorter.js';
-        tableSorter('myTable').init();
+        // Use '#id' for a single table or '.class' to initialize multiple tables
+        tableSorter('#myTable').init();
     </script>
 
 ---
 
-## USAGE
 
 HTML setup
 
-Add `data-sort` attribute to any header you want to make sortable. Sort icons are automatically inserted.
+Add `data-sort` attribute to any header you want to make sortable. If the attribute is present without a value (e.g. `<th data-sort>`), the current column index is used. You can also place `data-sort` on a `<thead>` element to enable sorting on all its header cells; individual header cells can opt out by setting `data-no-sort` on a `<th>`. Sort icons are automatically inserted.
 
     <table id="myTable">
         <thead>
@@ -65,7 +65,8 @@ Initialize:
 
     <script type="module">
         import { tableSorter } from '@eydun/table-sorter';
-        tableSorter('myTable').init();
+        // Use '#id' for a single table or '.class' to initialize multiple tables
+        tableSorter('#myTable').init();
     </script>
 
 Multi-column sorting:
@@ -97,7 +98,8 @@ Click to see a demo.
 Only one entry point:
 
     import { tableSorter } from '@eydun/table-sorter';
-    tableSorter('myTable').init();
+    // Use '#id' for a single table or '.class' to initialize multiple tables
+    tableSorter('#myTable').init();
 
 No global state, no framework required.
 

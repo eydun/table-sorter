@@ -18,13 +18,13 @@
 <h2>Chess Ratings - December 2025</h2>
 
 <table id="demoTable">
-    <thead>
+    <thead data-sort>
     <tr>
-        <th data-sort>Rank</th>
-        <th data-sort>Player</th>
-        <th data-sort>Rating</th>
-        <th data-sort>Games</th>
-        <th>Country</th>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Rating</th>
+        <th>Games</th>
+        <th data-no-sort>Country</th>
     </tr>
     </thead>
     <tbody>
@@ -102,8 +102,9 @@
 </table>
 
 <script type="module">
-    import { tableSorter } from '../src/table-sorter.js';
-    tableSorter('demoTable').init();
+    import {tableSorter} from '../src/table-sorter.js';
+    // initialize using '#id'
+    tableSorter('#demoTable').init();
 </script>
 
 </body>

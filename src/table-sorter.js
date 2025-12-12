@@ -1,4 +1,4 @@
-const STYLE_ID = 'vts-styles';
+const STYLE_ID = 'sorter-styles';
 
 const CSS = `
 th.sortable {
@@ -17,10 +17,11 @@ th.sortable svg {
     height: 0.9em;
     display: inline-block;
     vertical-align: middle;
-    margin-left: 0.4em;
+    margin-left: 0.35em;
     opacity: 0.35;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     filter: drop-shadow(0 0 1px rgba(0,0,0,0.1));
+    transform: translateY(-10%);
 }
 
 th.sortable.sort-active svg {
@@ -28,7 +29,7 @@ th.sortable.sort-active svg {
 }
 
 th.sortable svg.desc {
-    transform: rotate(180deg);
+    transform: translateY(-10%) rotate(180deg);
 }
 `;
 
@@ -40,40 +41,63 @@ function ensureStyles() {
     document.head.appendChild(style);
 }
 
-/**
- * Create a table sorter instance for the given table ID.
- * Usage:
- *   import { tableSorter } from '@eydun/vanilla-table-sorter';
- *   tableSorter('demoTable').init();
- *
- * Add data-sort attribute to <th> elements to make them sortable:
- *   <th data-sort>Name</th>           - Auto-detect column index
- *   <th data-sort="0">Name</th>       - Explicit column index
- */
-export function tableSorter(tableId) {
-    const STORAGE_KEY = `vts-sortOrders-${tableId}`;
-
+export function tableSorter(tableSelector) {
     return {
         sortOrders: [],
 
+        // resolvedTableId will hold the actual id (without #) when a single table is initialized
+        _resolvedTableId: 'table-sorter',
         init() {
             ensureStyles();
 
+            // Class selector -> initialize all matched tables
+            if (typeof tableSelector === 'string' && tableSelector.startsWith('.')) {
+                const tables = document.querySelectorAll(tableSelector);
+                tables.forEach((t, i) => {
+                    if (!t.id) t.id = `sorter-auto-${i}-${Date.now()}`;
+                    const inst = tableSorter('#' + t.id);
+                    inst.init();
+                });
+                return;
+            }
+
+            // Only accept explicit '#id' selector for single table initialization
+            if (typeof tableSelector !== 'string' || !tableSelector.startsWith('#')) {
+                console.warn('[table-sorter] tableSorter expects a selector starting with "#" for a single table or "." for multiple tables.');
+                return;
+            }
+
+            const tableId = tableSelector.slice(1);
+            // store resolved id for other methods via closure
+            this._resolvedTableId = tableId;
+
+            const STORAGE_KEY = `sorter-sortOrders-${tableId}`;
+
             const table = document.getElementById(tableId);
             if (!table) {
-                console.warn(`[vanilla-table-sorter] Table with id="${tableId}" not found.`);
+                console.warn(`[table-sorter] Table with id="${tableId}" not found.`);
                 return;
+            }
+
+            // If <thead data-sort> is present, enable sorting on all its <th> children
+            if (table.tHead && table.tHead.hasAttribute('data-sort')) {
+                table.tHead.querySelectorAll('th').forEach(th => {
+                    // Respect per-column opt-out with data-no-sort
+                    if (th.hasAttribute('data-no-sort')) return;
+                    if (!th.hasAttribute('data-sort')) th.setAttribute('data-sort', '');
+                });
             }
 
             // Setup sortable headers
             const headers = table.querySelectorAll('th[data-sort]');
-            headers.forEach((th, autoIndex) => {
+            headers.forEach((th) => {
                 // Determine column index
-                const explicitIndex = th.dataset.sort;
-                const index = explicitIndex !== '' ? parseInt(explicitIndex, 10) : autoIndex;
+                // If data-sort is present without a value (e.g. <th data-sort>), use the current column
+                const explicitIndex = th.getAttribute('data-sort');
+                const index = explicitIndex !== null && explicitIndex !== '' ? parseInt(explicitIndex, 10) : th.cellIndex;
 
                 if (Number.isNaN(index)) {
-                    console.warn(`[vanilla-table-sorter] Invalid data-sort value:`, th);
+                    console.warn(`[table-sorter] Invalid data-sort value:`, th);
                     return;
                 }
 
@@ -111,7 +135,7 @@ export function tableSorter(tableId) {
                     this.updateHeaderClasses();
                 }
             } catch (e) {
-                console.warn('[vanilla-table-sorter] Failed to read sort state from localStorage:', e);
+                console.warn('[table-sorter] Failed to read sort state from localStorage:', e);
             }
         },
 
@@ -144,13 +168,16 @@ export function tableSorter(tableId) {
             this.updateHeaderClasses();
 
             try {
+                const tableId = this._resolvedTableId;
+                const STORAGE_KEY = `sorter-sortOrders-${tableId}`;
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(this.sortOrders));
             } catch (e) {
-                console.warn('[vanilla-table-sorter] Failed to save sort state to localStorage:', e);
+                console.warn('[table-sorter] Failed to save sort state to localStorage:', e);
             }
         },
 
         applySort() {
+            const tableId = this._resolvedTableId;
             const table = document.getElementById(tableId);
             if (!table || !table.tBodies[0]) return;
 
@@ -176,6 +203,7 @@ export function tableSorter(tableId) {
         },
 
         updateHeaderClasses() {
+            const tableId = this._resolvedTableId;
             const table = document.getElementById(tableId);
             if (!table) return;
 
