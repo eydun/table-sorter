@@ -1,13 +1,9 @@
 {
-  "name": "@eydun/vanilla-table-sorter",
+  "name": "@eydun/table-sorter",
   "version": "1.2.0",
   "description": "A vanilla JavaScript sorter for HTML tables",
   "type": "module",
   "main": "src/table-sorter.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eydun/vanilla-table-sorter.git"
-  },
   "author": "Eydun Lamhauge",
   "license": "MIT",
   "keywords": [
@@ -19,9 +15,9 @@
     "client-side"
   ],
   "bugs": {
-    "url": "https://github.com/eydun/vanilla-table-sorter/issues"
+    "url": "https://github.com/eydun/table-sorter/issues"
   },
-  "homepage": "https://eydun.github.io/vanilla-table-sorter",
+  "homepage": "https://eydun.github.io/table-sorter",
   "publishConfig": {
     "access": "public"
   },

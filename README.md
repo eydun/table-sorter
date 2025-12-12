@@ -1,4 +1,4 @@
-# vanilla-table-sorter
+# table-sorter
 
 A lightweight, dependency-free ES module that adds sortable behavior to an HTML table.
 
@@ -18,12 +18,12 @@ Supports single-column sorting, multi-column sorting with Shift+click, numeric/t
 
 ## INSTALLATION
 
-#### 1) Install via npm (from GitHub)
+#### 1) Install via npm
 
-Install directly from the GitHub repo:
+Install from the npm registry:
 
 ```bash
-npm install github:eydun/vanilla-table-sorte
+npm install @eydun/table-sorter
 ```
 
 #### 2) Local file
@@ -64,7 +64,7 @@ Column indices are auto-detected from order. For explicit control use `data-sort
 Initialize:
 
     <script type="module">
-        import { tableSorter } from '@eydun/vanilla-table-sorter';
+        import { tableSorter } from '@eydun/table-sorter';
         tableSorter('myTable').init();
     </script>
 
@@ -96,7 +96,7 @@ Click to see a demo.
 
 Only one entry point:
 
-    import { tableSorter } from '@eydun/vanilla-table-sorter';
+    import { tableSorter } from '@eydun/table-sorter';
     tableSorter('myTable').init();
 
 No global state, no framework required.
