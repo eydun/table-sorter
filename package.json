@@ -10,9 +10,7 @@
     "table",
     "sort",
     "sorting",
-    "javascript",
-    "html-table",
-    "client-side"
+    "html-table"
   ],
   "bugs": {
     "url": "https://github.com/eydun/table-sorter/issues"

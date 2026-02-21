@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Vanilla-table-sorter demo</title>
     <script>
         let dir = location.pathname;
@@ -14,98 +15,174 @@
     </script>
 </head>
 <body>
+<main class="page">
+    <header class="hero">
+        <h1>table-sorter Demo</h1>
+        <p>This page shows every documented option in <code>@eydun/table-sorter</code>.</p>
+        <ol>
+            <li>Click a sortable column header to sort ascending or descending.</li>
+            <li>Use Shift+click on another header to add secondary sorting.</li>
+            <li>Use Tab + Enter or Space on headers for keyboard sorting.</li>
+            <li>Refresh the page to verify localStorage persistence.</li>
+        </ol>
+    </header>
 
-<h2>Chess Ratings - December 2025</h2>
+    <section class="demo-block">
+        <h2>Accessibility + resilience checks</h2>
+        <p>
+            Use the controls below to test keyboard sorting, idempotent re-initialization,
+            and safe handling of invalid persisted sort state.
+        </p>
+        <p class="demo-note">
+            Demo init now uses one call:
+            <code>tableSorter(['#ratingsTable', '#releaseTable', '.team-table']).init()</code>.
+        </p>
+        <div class="demo-actions">
+            <button id="reinitDemoBtn" type="button">Re-initialize all tables</button>
+            <button id="injectInvalidStateBtn" type="button">Inject invalid saved state</button>
+        </div>
+        <p class="demo-note">
+            Focus any sortable header with <kbd>Tab</kbd>, then press <kbd>Enter</kbd> or <kbd>Space</kbd>.
+        </p>
+        <p id="demoStatus" class="demo-status">Status: Ready.</p>
+    </section>
 
-<table id="demoTable">
-    <thead data-sort>
-    <tr>
-        <th>Rank</th>
-        <th>Player</th>
-        <th>Rating</th>
-        <th>Games</th>
-        <th data-no-sort>Country</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>1</td>
-        <td>Helgi Dam Ziska</td>
-        <td>2542</td>
-        <td>13</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Høgni Egilstoft Nielsen</td>
-        <td>2391</td>
-        <td>57</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>John Arni Nilssen</td>
-        <td>2331</td>
-        <td>27</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>Rógvi Egilstoft Nielsen</td>
-        <td>2312</td>
-        <td>38</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>Luitjen Akselsson Apol</td>
-        <td>2306</td>
-        <td>59</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>6</td>
-        <td>John Rødgaard</td>
-        <td>2237</td>
-        <td>23</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>7</td>
-        <td>Martin Poulsen</td>
-        <td>2225</td>
-        <td>12</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>8</td>
-        <td>Ólavur Simonsen</td>
-        <td>2200</td>
-        <td>8</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>9</td>
-        <td>Joan Hendrik Andreasen</td>
-        <td>2181</td>
-        <td>6</td>
-        <td>FO</td>
-    </tr>
-    <tr>
-        <td>10</td>
-        <td>Carl Eli Nolsøe Samuelsen</td>
-        <td>2166</td>
-        <td>-</td>
-        <td>FO</td>
-    </tr>
-    </tbody>
-</table>
+    <section class="demo-block">
+        <h2>#id init + &lt;thead data-sort&gt; + data-no-sort</h2>
+        <p>
+            This table is initialized with <code>tableSorter('#ratingsTable').init()</code>.
+            The whole header row is sortable via <code>data-sort</code> on
+            <code>&lt;thead&gt;</code>, except the Country column with <code>data-no-sort</code>.
+        </p>
+        <div class="table-wrap">
+            <table id="ratingsTable">
+                <thead data-sort>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Rating</th>
+                    <th>Games</th>
+                    <th data-no-sort>Country</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>1</td><td>Magnus Carlsen</td><td>2830</td><td>12</td><td>NOR</td></tr>
+                <tr><td>2</td><td>Hikaru Nakamura</td><td>2802</td><td>19</td><td>USA</td></tr>
+                <tr><td>3</td><td>Fabiano Caruana</td><td>2801</td><td>22</td><td>USA</td></tr>
+                <tr><td>4</td><td>Arjun Erigaisi</td><td>2786</td><td>27</td><td>IND</td></tr>
+                <tr><td>5</td><td>Gukesh D</td><td>2783</td><td>24</td><td>IND</td></tr>
+                <tr><td>6</td><td>Ian Nepomniachtchi</td><td>2770</td><td>16</td><td>FID</td></tr>
+                <tr><td>7</td><td>Nodirbek Abdusattorov</td><td>2768</td><td>21</td><td>UZB</td></tr>
+                <tr><td>8</td><td>Alireza Firouzja</td><td>2765</td><td>17</td><td>FRA</td></tr>
+                <tr><td>9</td><td>Praggnanandhaa R</td><td>2762</td><td>20</td><td>IND</td></tr>
+                <tr><td>10</td><td>Anish Giri</td><td>2755</td><td>14</td><td>NED</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="demo-block">
+        <h2>Explicit data-sort indices + date/type sorting</h2>
+        <p>
+            This table uses explicit <code>data-sort="index"</code> values on each header.
+            The Birth Date column uses <code>data-sort-dateformat="DD/MM/YYYY"</code>.
+            Peak Rating uses <code>data-sort-type="number"</code> to force numeric sorting.
+        </p>
+        <div class="table-wrap">
+            <table id="releaseTable">
+                <thead>
+                <tr>
+                    <th data-sort="0" data-sort-type="text">Player</th>
+                    <th data-sort="1" data-sort-dateformat="DD/MM/YYYY">Birth Date (DD/MM/YYYY)</th>
+                    <th data-sort="2" data-sort-type="date">Peak Rating Date (ISO)</th>
+                    <th data-sort="3" data-sort-type="number">Peak Rating</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Magnus Carlsen</td><td>30/11/1990</td><td>2014-05-01</td><td>2882</td></tr>
+                <tr><td>Garry Kasparov</td><td>13/04/1963</td><td>1999-07-01</td><td>2851</td></tr>
+                <tr><td>Fabiano Caruana</td><td>30/07/1992</td><td>2014-10-01</td><td>2844</td></tr>
+                <tr><td>Hikaru Nakamura</td><td>09/12/1987</td><td>2015-10-01</td><td>2816</td></tr>
+                <tr><td>Veselin Topalov</td><td>15/03/1975</td><td>2015-07-01</td><td>2816</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="demo-block">
+        <h2>Class selector init + data-sorter-id fallback</h2>
+        <p>
+            Both tables below are initialized with <code>tableSorter('.team-table').init()</code>.
+            The first one has no <code>id</code>, so it uses <code>data-sorter-id</code> for stable persistence.
+        </p>
+        <div class="table-grid">
+            <div class="table-wrap">
+                <table class="team-table" data-sorter-id="ops-team-table">
+                    <thead data-sort>
+                    <tr>
+                        <th>Player</th>
+                        <th>Classical Rating</th>
+                        <th>Last FIDE List</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>Arjun Erigaisi</td><td>2786</td><td>2026-02-01</td></tr>
+                    <tr><td>Gukesh D</td><td>2783</td><td>2026-02-01</td></tr>
+                    <tr><td>Praggnanandhaa R</td><td>2762</td><td>2026-02-01</td></tr>
+                    <tr><td>Anish Giri</td><td>2755</td><td>2026-02-01</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-wrap">
+                <table id="supportTeamTable" class="team-table">
+                    <thead data-sort>
+                    <tr>
+                        <th>Player</th>
+                        <th>Rapid Peak Rating</th>
+                        <th>Blitz Peak Rating</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>Hikaru Nakamura</td><td>2836</td><td>2900</td></tr>
+                    <tr><td>Alireza Firouzja</td><td>2820</td><td>2904</td></tr>
+                    <tr><td>Magnus Carlsen</td><td>2919</td><td>2986</td></tr>
+                    <tr><td>Nodirbek Abdusattorov</td><td>2810</td><td>2783</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
 
 <script type="module">
     import {tableSorter} from '../src/table-sorter.js';
-    // initialize using '#id'
-    tableSorter('#demoTable').init();
+
+    const demoTargets = ['#ratingsTable', '#releaseTable', '.team-table'];
+
+    const statusEl = document.getElementById('demoStatus');
+    const setStatus = (msg) => {
+        if (statusEl) statusEl.textContent = `Status: ${msg}`;
+    };
+
+    tableSorter(demoTargets).init();
+
+    document.getElementById('reinitDemoBtn')?.addEventListener('click', () => {
+        tableSorter(demoTargets).init();
+        setStatus('Re-initialized all tables.');
+    });
+
+    document.getElementById('injectInvalidStateBtn')?.addEventListener('click', () => {
+        const key = 'sorter-sortOrders-ratingsTable';
+        const invalidPayload = [
+            { index: 'bad', asc: 'nope' },
+            { index: -1, asc: true },
+            { index: 999, asc: false }
+        ];
+        localStorage.setItem(key, JSON.stringify(invalidPayload));
+        setStatus(`Injected invalid payload into localStorage[\"${key}\"]. Reload to verify it is ignored.`);
+    });
 </script>
 
 </body>
 </html>
+
